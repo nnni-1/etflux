@@ -3,7 +3,7 @@ package ru.alexeev.etflux.entity;
 import lombok.*;
 import ru.alexeev.etflux.dictionary.Currency;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,12 +19,10 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "asset_type_id")
     private AssetType assetType;
