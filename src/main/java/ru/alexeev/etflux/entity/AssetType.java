@@ -4,7 +4,7 @@ package ru.alexeev.etflux.entity;
 import lombok.*;
 import ru.alexeev.etflux.dictionary.AssetTypeName;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity

@@ -2,7 +2,9 @@ package ru.alexeev.etflux.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -16,10 +18,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Asset asset;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "asset_transaction",
+            joinColumns = @JoinColumn(name = "transaction_id", unique = false),
+            inverseJoinColumns = @JoinColumn(name = "asset_id", unique = false))
+    private List<Asset> assets;
 }
