@@ -2,7 +2,6 @@ package ru.alexeev.etflux.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.alexeev.etflux.dictionary.UserRoleEnum;
 
 import java.util.List;
 
@@ -20,10 +19,14 @@ public class UserRole {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", unique = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", unique = false))
+            joinColumns = @JoinColumn(name = "role_id", unique = false),
+            inverseJoinColumns = @JoinColumn(name = "user_id", unique = false))
     private List<User> users;
 
-    @Enumerated(EnumType.STRING)
-    private UserRoleEnum role;
+    @Column(unique = true)
+    private String role;
+
+    public UserRole(String role) {
+        this.role = role;
+    }
 }
