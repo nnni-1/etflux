@@ -2,7 +2,10 @@ package ru.alexeev.etflux.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.alexeev.etflux.dictionary.UserRoleEnum;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,9 +26,19 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", unique = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", unique = false))
     private List<UserRole> roles;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (roles == null){
+            roles = new ArrayList<>();
+        }
+        createdAt = LocalDateTime.now();
+    }
 }
