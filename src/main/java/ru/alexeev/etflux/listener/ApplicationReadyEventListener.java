@@ -16,10 +16,11 @@ public class ApplicationReadyEventListener {
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
-        userRoleRepository.deleteAll();
-        userRoleRepository.save(new UserRole("ADMIN"));
-        userRoleRepository.save(new UserRole("USER"));
-        userRoleRepository.save(new UserRole("MODERATOR"));
+        if (userRoleRepository.count() == 0) {
+            userRoleRepository.save(new UserRole("ADMIN"));
+            userRoleRepository.save(new UserRole("USER"));
+            userRoleRepository.save(new UserRole("MODERATOR"));
+        }
     }
 
 }
