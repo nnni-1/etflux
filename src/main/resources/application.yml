@@ -7,12 +7,19 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
 
 server:
-  port: 8080
+  port: 8082
 
 logging:
   level:
     web: debug
+
+jwt:
+  secret:
+    123
+  access-token:
+    ttl:
+      1000000
