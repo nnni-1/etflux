@@ -150,7 +150,7 @@
         tbody.innerHTML = "";
 
         for (const user of users) {
-            const rolesHtml = (user.roles || []).map(r => `<span class="role-badge">${r.name}</span>`).join("");
+            const rolesHtml = (user.roles || []).map(r => `<span class="role-badge">${r.role}</span>`).join("");
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -164,9 +164,9 @@
           <div class="user-actions">
             <select onchange="changeRole(${user.id}, this.value)">
               <option value="">-- Изменить роль --</option>
-              <option value="ADMIN">ADMIN</option>
-              <option value="MODERATOR">MODERATOR</option>
-              <option value="USER">USER</option>
+              <option value="34">ADMIN</option>
+              <option value="36">MODERATOR</option>
+              <option value="35">USER</option>
             </select>
             <button onclick="toggleStatus(${user.id})" class="btn ${user.active ? 'btn-danger' : 'btn-success'}">
               ${user.active ? "Заблокировать" : "Разблокировать"}
