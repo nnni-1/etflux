@@ -1,15 +1,5 @@
-FROM maven:3-jdk-8-alpine as builder
+FROM amazoncorretto:17-alpine-jdk
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
-RUN mvn package
-
-FROM openjdk:8-jre-alpine
-
-COPY --from=builder /usr/src/app/target/*.jar /app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java"]
-CMD ["-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "etflux-1.0-SNAPSHOT.jar"]

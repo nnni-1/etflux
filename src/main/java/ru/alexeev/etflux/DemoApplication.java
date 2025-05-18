@@ -2,8 +2,6 @@ package ru.alexeev.etflux;
 
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
 public class DemoApplication {

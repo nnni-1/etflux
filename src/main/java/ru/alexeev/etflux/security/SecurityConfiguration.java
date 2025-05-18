@@ -52,14 +52,13 @@ public class SecurityConfiguration {
                         .permitAll())
 //                .addFilterAt(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 //                .addFilterAt(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(Customizer.withDefaults())
                 .rememberMe(Customizer.withDefaults())
                 .cors(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .logoutSuccessUrl("/login?logout"))
+                        .logoutSuccessUrl("/c-login"))
                 .build();
     }
 
