@@ -1,10 +1,12 @@
 package ru.alexeev.etflux.service;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import ru.alexeev.etflux.web.controller.admin.dto.UserAdminDto;
 import ru.alexeev.etflux.dictionary.UserStatus;
 import ru.alexeev.etflux.dto.UserExistsDto;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Validated
 public class UserService {
 
     private UserRepository userRepository;
@@ -34,8 +37,28 @@ public class UserService {
 
     public List<UserAdminDto> findAll(int pageNum, int size) {
         Pageable page = PageRequest.of(pageNum, size);
-        System.out.println(userMapper.toDtoList(userRepository.findAll(page).getContent()));
         return userMapper.toDtoList(userRepository.findAll(page).getContent());
+    }
+
+    public List<UserAdminDto> findAll(String username, @Valid String email, int pageNum, int size) {
+        Pageable page = PageRequest.of(pageNum, size);
+        List<User> userList;
+
+        if (email != null && username != null) {
+            userList = userRepository.findByUsernameContainingAndEmailContainingIgnoreCase(username, email, page).getContent();
+            System.out.println(userList);
+        } else if (email != null && !email.isEmpty()) {
+            userList = userRepository.findByEmailContainingIgnoreCase(email, page).getContent();
+            System.out.println(userList);
+        } else if (username != null && !username.isEmpty()) {
+            userList = userRepository.findByUsernameContainingIgnoreCase(username, page).getContent();
+            System.out.println(userList);
+        } else {
+            System.out.println(findAll(pageNum, size));
+            return findAll(pageNum, size);
+        }
+
+        return userMapper.toDtoList(userList);
     }
 
     public UserAdminDto findById(Long id) {
@@ -79,9 +102,25 @@ public class UserService {
         roles.remove(role);
     }
 
+    public List<UserAdminDto> findByUsername(String username, int pageNum, int size){
+        Pageable page = PageRequest.of(pageNum, size);
+        return userRepository.findByUsernameContainingIgnoreCase(username, page)
+                .stream()
+                .map(userMapper::mapToUserAdminDto)
+                .toList();
+    }
+
     private User findUser(Long userId){
         return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("user", "id", String.valueOf(userId)));
+    }
+
+    public List<UserAdminDto> findByEmail(String email, int pageNum, int size) {
+        Pageable page = PageRequest.of(pageNum, size);
+        return userRepository.findByEmailContainingIgnoreCase(email, page)
+                .stream()
+                .map(userMapper::mapToUserAdminDto)
+                .toList();
     }
 }

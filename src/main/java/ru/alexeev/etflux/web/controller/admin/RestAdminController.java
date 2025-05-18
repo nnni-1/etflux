@@ -49,4 +49,13 @@ public class RestAdminController {
         return ResponseEntity.ok("status changed successfully");
     }
 
+    @GetMapping("/")
+    public ResponseEntity<List<UserAdminDto>> findUserByLogin(@RequestParam(value = "username", required = false) String username,
+                                                              @RequestParam(value = "email", required = false) String email,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(userService.findAll(username, email, page, size));
+    }
+
+
 }
