@@ -38,7 +38,7 @@ jobs:
         run: mvn clean package
 
       - name: Upload artifact
-        uses: docker://ghcr.io/actions/upload-artifact:v3
+        uses: actions/upload-artifact@v2
         with:
           path: target/*.jar
 
