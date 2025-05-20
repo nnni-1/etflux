@@ -4,7 +4,7 @@ networks:
 services:
   postgres:
     env_file:
-      - local.env
+      - prod.env
     image: postgres:15-alpine
     container_name: postgres-db
     environment:
@@ -19,13 +19,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   etflux:
-    build:
-      context: .
-      dockerfile: Dockerfile
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    image: ghcr.io/nnni-1/etflux:latest
     container_name: etflux
     restart: always
     env_file:
-      - local.env
+      - prod.env
     ports:
       - "8082:8080"
     networks:
