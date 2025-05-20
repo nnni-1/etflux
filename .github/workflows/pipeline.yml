@@ -62,6 +62,25 @@ jobs:
           echo "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      - name: Check if prod.env exists locally
+        run: |
+          if [ -f prod.env ]; then
+            echo "prod.env found!"
+          else
+            echo "prod.env NOT FOUND!" && exit 1
+          fi
+
+      - name: Deploy files via rsync
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          rsync -avz -e ssh \
+            --exclude .git \
+            --exclude .github \
+            --exclude target \
+            . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
+
       - name: Checkout docker-compose.yml
         uses: actions/checkout@v3
 
