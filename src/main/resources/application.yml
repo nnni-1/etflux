@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/etflux
-    username: postgres
-    password: alexxX27*
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   session:
     jdbc:
@@ -26,10 +26,10 @@ logging:
 
 jwt:
   secret:
-    123
+    ${JWT_SECRET}
   access-token:
     ttl:
-      1000000
+      ${JWT_ACCESS_TTL}
 api:
   tbank:
     token:
