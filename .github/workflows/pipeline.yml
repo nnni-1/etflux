@@ -44,6 +44,10 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME .
+          
+      - name: Tag for GitHub Container Registry
+        run: |
+          docker tag etflux-local:latest $IMAGE_NAME
 
       - name: List Docker images
         run: |
