@@ -85,7 +85,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-          
+
       - name: Create remote directory if not exists
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -100,12 +100,11 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
-          rsync -avz -e ssh \
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
             --exclude .git \
             --exclude .github \
             --exclude target \
             . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
-
 
       - name: Check if docker-compose.yml exists
         run: |
