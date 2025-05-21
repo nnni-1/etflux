@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/models
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/etflux:latest
