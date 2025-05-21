@@ -7,7 +7,7 @@ on:
       - feature/models
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}:latest
+  IMAGE_NAME: ghcr.io/nnni-1/etflux:latest
 
 jobs:
   # ========= JOB 1: Build Docker Image =========
@@ -27,7 +27,7 @@ jobs:
       - name: Build Maven project and run tests
         run: |
           mvn clean package
-          
+
       - name: Check if JAR exists in target/
         run: |
           if [ -f target/etflux-1.0-SNAPSHOT.jar ]; then
@@ -45,8 +45,8 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME .
 
-      - name: List Docker Images
-        run : |
+      - name: List Docker images
+        run: |
           docker images
 
   # ========= JOB 2: Push Image to GitHub Container Registry =========
@@ -58,7 +58,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: |
           docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-          echo $IMAGE_NAME
+
       - name: Push Docker image
         run: |
           docker push $IMAGE_NAME
@@ -80,31 +80,9 @@ jobs:
           echo "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Check if .env exists locally
-        run: |
-          if [ -f prod.env ]; then
-            echo "prod.env found!"
-          else
-            echo "prod.env NOT FOUND!" && exit 1
-          fi
-
-      - name: Deploy files via rsync
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-        run: |
-          rsync -avz -e ssh \
-            --exclude .git \
-            --exclude .github \
-            --exclude target \
-            . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
-
-      - name: Checkout docker-compose.yml
-        uses: actions/checkout@v3
-
       - name: Replace image name in docker-compose.yml
         run: |
-          sed -i "s|image: etflux|image: ghcr.io/${{ github.repository }}/etflux:latest|g" docker-compose.yml
+          sed -i "s|image: etflux|image: $IMAGE_NAME|g" docker-compose.yml
 
       - name: Deploy files via rsync
         env:
