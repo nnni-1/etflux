@@ -71,7 +71,7 @@ jobs:
   # ========= JOB 3: Deploy on Server =========
   deploy:
     name: Deploy on VPS
-    needs: push
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Configure SSH
