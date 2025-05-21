@@ -22,6 +22,9 @@ services:
 
   etflux:
     image: ghcr.io/nnni-1/etflux:latest
+#    build:
+#      dockerfile: ./Dockerfile
+#      context: .
     container_name: etflux
     restart: always
     profiles:
