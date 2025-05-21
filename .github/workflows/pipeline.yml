@@ -28,11 +28,6 @@ jobs:
       - name: Build Maven project and run tests
         run: |
           mvn clean package
-      - name: Prepare Docker context
-        run: |
-          mkdir -p target
-          cp target/etflux-1.0-SNAPSHOT.jar build/app.jar
-
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME .
