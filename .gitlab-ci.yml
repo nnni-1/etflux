@@ -40,7 +40,7 @@ deploy-vps:
       docker run
       --name=$CI_PROJECT_NAME
       --restart=always
-      --env-file prod.env
+      --env-file .env
       --network etflux-network
       -p 8082:8080
       -d $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
