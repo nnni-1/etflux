@@ -135,5 +135,5 @@ jobs:
             cd /home/${SSH_USER}/etflux
             docker compose pull
             docker compose down
-            docker compose up -d
+            docker compose --profile full up -d
           EOF
