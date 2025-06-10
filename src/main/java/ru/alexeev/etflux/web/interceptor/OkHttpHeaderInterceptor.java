@@ -23,8 +23,6 @@ public class OkHttpHeaderInterceptor implements Interceptor {
                 .newBuilder()
                 .header(headerName, headerValue)
                 .build();
-        try (Response response = chain.proceed(requestWithHeader)) {
-            return response;
-        }
+        return chain.proceed(requestWithHeader);
     }
 }

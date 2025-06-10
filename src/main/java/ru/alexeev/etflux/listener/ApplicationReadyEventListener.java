@@ -49,41 +49,6 @@ public class ApplicationReadyEventListener {
                         .build());
         }
 
-//        EntityTransaction transaction = entityManager.getTransaction();
-//        try {
-//            if (roleRepository.count() == 0) {
-//                transaction.begin();
-//                UserRole userRole = new UserRole("USER");
-//                userRole.setId(1);
-//                UserRole moderatorRole = new UserRole("MODERATOR");
-//                moderatorRole.setId(2);
-//                UserRole adminRole = new UserRole("ADMIN");
-//                adminRole.setId(3);
-//                entityManager.persist(List.of(userRole, moderatorRole, adminRole));
-//                entityManager.persist(User.builder()
-//                        .email("nikita@gmail.com")
-//                        .roles(List.of(adminRole))
-//                        .hashPassword(passwordEncoder.encode("aaaaaA1*"))
-//                        .username("nikita")
-//                        .build());
-//            } else {
-//                entityManager.persist(User.builder()
-//                        .email("nikita@gmail.com")
-//                        .roles(List.of(roleRepository.findByRole("ADMIN")))
-//                        .hashPassword(passwordEncoder.encode("aaaaaA1*"))
-//                        .username("nikita")
-//                        .build());
-//            }
-//            transaction.commit();
-//        } catch (Exception e){
-//            transaction.rollback();
-//            throw new RuntimeException(e);
-//        } finally {
-//            entityManager.close();
-//        }
-
-
-
     }
 
 }

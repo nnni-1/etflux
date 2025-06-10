@@ -2,6 +2,7 @@ package ru.alexeev.etflux.service;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,30 +36,25 @@ public class UserService {
                 .build();
     }
 
-    public List<UserAdminDto> findAll(int pageNum, int size) {
-        Pageable page = PageRequest.of(pageNum, size);
-        return userMapper.toDtoList(userRepository.findAll(page).getContent());
+    public Page<UserAdminDto> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(user -> userMapper.mapToUserAdminDto(user));
     }
 
-    public List<UserAdminDto> findAll(String username, @Valid String email, int pageNum, int size) {
-        Pageable page = PageRequest.of(pageNum, size);
-        List<User> userList;
-
+    public Page<UserAdminDto> findAll(String username, String email, Pageable pageable) {
         if (email != null && username != null) {
-            userList = userRepository.findByUsernameContainingAndEmailContainingIgnoreCase(username, email, page).getContent();
-            System.out.println(userList);
+            return userRepository.findByUsernameContainingAndEmailContainingIgnoreCase(username, email, pageable)
+                    .map(user -> userMapper.mapToUserAdminDto(user));
         } else if (email != null && !email.isEmpty()) {
-            userList = userRepository.findByEmailContainingIgnoreCase(email, page).getContent();
-            System.out.println(userList);
+            return userRepository.findByEmailContainingIgnoreCase(email, pageable)
+                    .map(user -> userMapper.mapToUserAdminDto(user));
         } else if (username != null && !username.isEmpty()) {
-            userList = userRepository.findByUsernameContainingIgnoreCase(username, page).getContent();
-            System.out.println(userList);
+            return userRepository.findByUsernameContainingIgnoreCase(username, pageable)
+                    .map(user -> userMapper.mapToUserAdminDto(user));
         } else {
-            System.out.println(findAll(pageNum, size));
-            return findAll(pageNum, size);
+            return userRepository.findAll(pageable)
+                    .map(user -> userMapper.mapToUserAdminDto(user));
         }
-
-        return userMapper.toDtoList(userList);
     }
 
     public UserAdminDto findById(Long id) {

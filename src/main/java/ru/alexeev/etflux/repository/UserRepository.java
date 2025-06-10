@@ -1,6 +1,7 @@
 package ru.alexeev.etflux.repository;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
     Page<User> findByEmailContainingIgnoreCase(String email, Pageable pageable);
     Page<User> findByUsernameContainingAndEmailContainingIgnoreCase(String username, String email, Pageable pageable);
+    @NotNull
     @Lazy
-    Page<User> findAll(Pageable pageable);
+    Page<User> findAll(@NotNull Pageable pageable);
 }
