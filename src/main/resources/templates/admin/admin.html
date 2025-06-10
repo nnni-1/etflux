@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Админка: Пользователи</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .actions select,
+        .btn {
+            padding: 6px 12px;
+            margin-right: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 6px 12px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Панель Администратора — Пользователи</h1>
+
+<div style="margin-bottom: 20px;">
+    <input type="text" id="searchInputUsername" placeholder="Поиск по username..." />
+    <input type="text" id="searchInputEmail" placeholder="Поиск по email..." />
+</div>
+
+<table id="usersTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Email</th>
+        <th>Роли</th>
+        <th>Создан</th>
+        <th>Статус</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody id="usersBody">
+    </tbody>
+</table>
+
+<div class="pagination" id="paginationControls">
+    <button onclick="prevPage()">Назад</button>
+    <button onclick="nextPage()">Вперед</button>
+</div>
+<div class="btn" id="searchAllButton">
+    <button onclick="currPage()">Найти всех пользователей</button>
+</div>
+
+<script>
+    let currentPage = 0;
+    let allUsers = [];
+
+    let searchingByUsername = false
+    let searchingByEmail = false
+    let searchingAll = true
+
+    const searchInputUsernameElement = document.getElementById('searchInputUsername')
+    searchInputUsernameElement.addEventListener('input',
+        () =>{
+        if (searchInputUsernameElement.value.length === 0){
+            searchingByUsername = false;
+            searchingByEmail = false;
+            searchingAll = true;
+        }
+        searchingByUsername = true;
+        searchingByEmail = false;
+        searchingAll = false;
+        filterUsersByUsername(this.currentPage, searchInputUsernameElement.value.toLowerCase());
+    });
+
+    const searchInputEmailElement = document.getElementById('searchInputEmail');
+    searchInputEmailElement.addEventListener('input',
+        () => {
+        if (searchInputEmailElement.value.length === 0){
+            searchingByUsername = false;
+            searchingByEmail = false;
+            searchingAll = true;
+        }
+        searchingByUsername = false;
+        searchingByEmail = true;
+        searchingAll = false;
+        filterUsersByEmail(this.currentPage, searchInputEmailElement.value.toLowerCase());
+    });
+
+    async function filterUsersByUsername(page = 0, username) {
+        const response = await fetch(`/api/admin/users?username=${username}&page=${page}&size=10`);
+        const filtered = await response.json();
+        renderUsers(filtered);
+    }
+
+    async function filterUsersByEmail(page = 0, email) {
+        const response = await fetch(`/api/admin/users?email=${email}&page=${page}&size=10`);
+        const filtered = await response.json();
+        renderUsers(filtered);
+    }
+
+    async function loadUsers(page = 0) {
+        const response = await fetch(`/api/admin/users?page=${page}&size=10`);
+        const users = await response.json();
+        allUsers = users;
+        renderUsers(users);
+    }
+
+    function renderUsers(users) {
+        const tbody = document.getElementById("usersBody");
+        tbody.innerHTML = "";
+
+        for (const user of users) {
+            const rolesHtml = (user.roles || []).map(r => `<span class="role-badge">${r.role}</span>`).join("");
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+        <td>${user.id}</td>
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>${rolesHtml}</td>
+        <td>${new Date(user.createdAt).toLocaleString()}</td>
+        <td>${user.active ? "Активен" : "Заблокирован"}</td>
+        <td>
+          <div class="user-actions">
+            <select onchange="changeRole(${user.id}, this.value)">
+              <option value="">-- Добавить роль --</option>
+              <option value="1">ADMIN</option>
+              <option value="3">MODERATOR</option>
+              <option value="2">USER</option>
+            </select>
+            <select onchange="deleteRole(${user.id}, this.value)">
+              <option value="">-- Удалить роль --</option>
+            </select>
+            <button onclick="toggleStatus(${user.id})" class="btn ${user.active ? 'btn-danger' : 'btn-success'}">
+              ${user.active ? "Заблокировать" : "Разблокировать"}
+            </button>
+          </div>
+        </td>
+      `;
+            const selects = tr.querySelectorAll("select");
+            const deleteRoleSelect = selects[1];
+            user.roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id;
+                option.textContent = role.role;
+                deleteRoleSelect.appendChild(option);
+            });
+
+            tbody.appendChild(tr);
+        }
+    }
+
+    async function deleteRole(userId, roleId) {
+        if (!roleId) return;
+        const response = await fetch(`/api/admin/users/delete-role/${userId}?roleId=${roleId}`, { method: "GET" });
+        if (response.ok) {
+            alert("Роль удалена");
+            loadUsers(currentPage);
+        } else {
+            alert("Ошибка при изменении роли");
+        }
+    }
+
+    async function changeRole(userId, roleId) {
+        if (!roleId) return;
+        const response = await fetch(`/api/admin/users/add-role/${userId}?roleId=${roleId}`, { method: "GET" });
+        if (response.ok) {
+            alert("Роль добавлена");
+            loadUsers(currentPage);
+        } else {
+            alert("Ошибка при изменении роли");
+        }
+    }
+
+    async function toggleStatus(userId) {
+        const response = await fetch(`/api/admin/users/change-status/${userId}?status=BLOCKED`, { method: "GET" });
+        if (response.ok) {
+            alert("Статус изменён");
+            loadUsers(currentPage);
+        } else {
+            alert("Ошибка при изменении статуса");
+        }
+    }
+
+    function currPage(){
+        searchingByUsername = false;
+        searchingByEmail = false;
+        searchingAll = true;
+        searchInputEmailElement.value = '';
+        searchInputUsernameElement.value = '';
+        loadUsers(currentPage);
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            if (searchingByEmail){
+                filterUsersByEmail(currentPage, searchInputEmailElement.value.toLowerCase());
+            } else if (searchingByUsername){
+                filterUsersByUsername(currentPage, searchInputUsernameElement.value.toLowerCase());
+            } else {
+                loadUsers(currentPage);
+            }
+        }
+    }
+
+    function nextPage() {
+        currentPage++;
+        if (searchingByEmail){
+            filterUsersByEmail(currentPage, searchInputEmailElement.value.toLowerCase());
+        } else if (searchingByUsername){
+            filterUsersByUsername(currentPage, searchInputUsernameElement.value.toLowerCase());
+        } else {
+            loadUsers(currentPage);
+        }
+    }
+
+    window.onload = () => loadUsers();
+</script>
+
+</body>
+</html>

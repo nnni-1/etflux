@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:text="${title} ?: 'ETFlux'">ETFlux</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <!-- Общие стили -->
+    <style>
+        /* Общие стили для всех страниц */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Навигационная панель */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a6cf7;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #4a6cf7;
+        }
+    </style>
+</head>
+
+<!-- Navbar -->
+<header th:fragment="navbar">
+    <div class="navbar">
+        <div class="logo">AssetTracker</div>
+        <div class="nav-links">
+            <a href="#">Главная</a>
+            <a href="/profile">Профиль</a>
+            <a href="/portfolio">Портфель</a>
+            <a href="/forum">Форум</a>
+            <a th:href="@{/login}">Войти</a>
+            <a th:href="@{/register}">Регистрация</a>
+        </div>
+    </div>
+</header>

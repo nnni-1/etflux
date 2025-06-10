@@ -6,12 +6,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.alexeev.etflux.entity.User;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, Serializable {
     private final User user;
 
     @Override
@@ -31,5 +32,9 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return user.getUsername();
+    }
+
+    public User getUser(){
+        return user;
     }
 }

@@ -1,10 +1,8 @@
 package ru.alexeev.etflux.dto.outsider;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -12,6 +10,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 public class OutsideStockResponse {
 
     @JsonProperty("isin")
@@ -48,9 +47,11 @@ public class OutsideStockResponse {
     private boolean forIisFlag;
 
     @JsonProperty("first1minCandleDate")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private OffsetDateTime first1minCandleDate;
 
     @JsonProperty("first1dayCandleDate")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private OffsetDateTime first1dayCandleDate;
 
     @JsonProperty("forQualInvestorFlag")
