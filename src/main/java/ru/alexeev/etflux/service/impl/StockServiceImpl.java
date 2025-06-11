@@ -69,6 +69,14 @@ public class StockServiceImpl implements StockService {
     public AssetPositionResponseDto<Stock> addStock(StockRequestDto stockRequestDto, User user) {
         Stock stock = getOrCreateStock(stockRequestDto);
         stock.setType(AssetTypeName.STOCK);
+
+
+        if (user.getProfile() == null){
+            var userProfile = new UserProfile();
+            userProfile.setUser(user);
+            var savedUserProfile = profileRepository.save(userProfile);
+            user.setProfile(savedUserProfile);
+        }
         UserProfile profile = user.getProfile();
 
         Optional<UserAssetPosition> positionOptional = userAssetPositionRepository
@@ -98,6 +106,9 @@ public class StockServiceImpl implements StockService {
     }
 
     private Stock getOrCreateStock(StockRequestDto dto) {
+        if (dto.getType() == null){
+            dto.setType("share");
+        }
         Optional<Stock> stock = stockRepository.findByFigi(dto.getFigi());
         return stock
                 .or(() -> {
@@ -109,9 +120,10 @@ public class StockServiceImpl implements StockService {
                 })
                 .orElseGet(() -> {
                     try {
+                        System.out.println("ticker " + dto.getTicker());
                         OutsideStockResponse resp = client.getListOfInstruments(dto.getTicker())
                                 .stream()
-                                .filter(inst -> inst.getInstrumentType().equals(dto.getType()))
+                                .filter(inst -> inst.getInstrumentType().toLowerCase().equals(dto.getType()))
                                 .findFirst().get();
                         return stockRepository.save(stockMapper.outsideToStock(resp));
                     } catch (InstrumentsNotFoundException e) {
