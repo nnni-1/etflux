@@ -24,7 +24,7 @@ public class PortfolioController {
     @GetMapping
     public String portfolio(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         model.addAttribute("user", userDetails.getUser().getProfile());
-        return "portfolio";
+        return "portfolio2";
     }
 
     @PostMapping("/deposits/save")
@@ -33,7 +33,7 @@ public class PortfolioController {
                              @ModelAttribute("depositDto") DepositRequestDto depositRequestDto,
                              @ModelAttribute("stockDto") StockRequestDto stockRequestDto,
                              BindingResult result) {
-        return "portfolio";
+        return "portfolio2";
     }
 
 }

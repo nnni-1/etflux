@@ -9,6 +9,7 @@ import ru.alexeev.etflux.exception.dto.ErrorDto;
 
 @ControllerAdvice
 public class ExceptionControllerAdvice {
+
     @ExceptionHandler(InstrumentsNotFoundException.class)
     public ResponseEntity<ErrorDto> handleInstrumentsNotFoundException(InstrumentsNotFoundException ex, HttpServletRequest request) {
         return new ResponseEntity<>(ErrorDto.builder()

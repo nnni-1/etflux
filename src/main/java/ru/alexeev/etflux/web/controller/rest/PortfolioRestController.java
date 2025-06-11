@@ -38,6 +38,7 @@ public class PortfolioRestController {
 
     @GetMapping
     public Map<String, List<AssetPositionResponseDto<?>>> getStock(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        System.out.println(" IN CONTROLLER " + userDetails.getUser().getUsername());
         return profileService.getAssets(userDetails.getUser());
     }
 

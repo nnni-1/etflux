@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head(title)">
-    <meta charset="UTF-8">
-    <title th:text="${title} ?: 'ETFlux'">ETFlux</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+<head th:fragment="head(title, css)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">Default title</title>
+
+    <link rel="stylesheet" th:href="${css != null ? css : '/css/portfolio.css'}" href="/css/portfolio.css"/>
     <!-- Общие стили -->
     <style>
         /* Общие стили для всех страниц */
@@ -58,6 +60,13 @@
 
         .nav-links a:hover {
             color: #4a6cf7;
+        }
+
+        .hidden {
+            display: none;
+        }
+        .modal {
+            display: none; /* По умолчанию скрыто */
         }
     </style>
 </head>
