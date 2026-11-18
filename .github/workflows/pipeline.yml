@@ -136,7 +136,7 @@ jobs:
         run: |
           ssh ${SSH_USER}@${SERVER_IP} << 'EOF'
             cd /home/${SSH_USER}/etflux
-            docker compose pull
-            docker compose down
-            docker compose up -d
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
           EOF
