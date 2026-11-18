@@ -56,7 +56,7 @@ jobs:
       - name: List Docker images
         run: |
           docker images
-
+          steps:
       - name: Log in to GitHub Container Registry
         run: |
           docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
           docker push $IMAGE_NAME
 
 
-      
+    
 
   # ========= JOB 3: Deploy on Server =========
   deploy:
