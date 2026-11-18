@@ -1,161 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments :: head('Портфель', '/css/portfolio.css')"></head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Портфель</title>
+    <style>
+
+    </style>
+</head>
 <body>
-<div th:replace="fragments :: navbar"></div>
 
-<div class="container">
+<h1>Инвестиционный портфель</h1>
+<div id="total">Загрузка...</div>
 
-    <!-- Header -->
-    <header class="dashboard-header">
-        <h1>Инвестиционный портфель</h1>
-        <div class="total-value">
-            <span id="total">Загрузка...</span>
-            <span id="growth" class="positive">+0%</span>
-        </div>
-    </header>
+<div class="tabs" id="tabs"></div>
 
-    <!-- Navigation Tabs -->
-    <nav class="tabs" id="tabs">
-        <a href="#" class="active">Обзор</a>
-        <a href="#">История</a>
-        <a href="#">Аналитика</a>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="dashboard-content">
-
-        <!-- Portfolio Summary -->
-        <section class="summary">
-            <button id="openModalBtn" class="btn btn-primary">Добавить актив</button>
-        </section>
-
-        <!-- Asset List -->
-        <section class="asset-list" id="assets-container">
-            <!-- Активы будут добавлены здесь -->
-        </section>
-
-    </main>
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h3>Действия</h3>
-        <ul>
-            <li><a href="#">Портфель</a></li>
-            <li><a href="#">Статистика</a></li>
-            <li><a href="#">Настройки</a></li>
-        </ul>
-    </aside>
-
+<div class="asset-list" id="assets-container">
 </div>
 
-<!-- Modal Window -->
-<div class="modal" id="assetModal">
-    <div class="modal-content">
-        <span id="closeModalBtn">&times;</span>
-        <h2>Выберите тип актива</h2>
-
-        <!-- Buttons for asset types -->
-        <button id="showStockFormBtn">Акция</button>
-        <button id="showDepositFormBtn">Банковский вклад</button>
-
-        <!-- Accordion for asset types -->
-
-        <!-- Форма для акций -->
-        <form id="stockForm" class="asset-form hidden">
-            <h3>Добавить акцию</h3>
-            <div class="form-row">
-                <label>
-                    Тикер:
-                    <input type="text" name="ticker" required>
-                </label>
-            </div>
-            <div class="form-row">
-                <label>
-                    FIGI:
-                    <input type="text" name="figi">
-                </label>
-            </div>
-            <div class="form-row">
-                <label>
-                    Цена покупки:
-                    <input type="number" step="0.01" name="buyPrice" required>
-                </label>
-                <label>
-                    Количество:
-                    <input type="number" step="0.01" name="quantity" required>
-                </label>
-            </div>
-            <label>
-                Дата покупки:
-                <input type="datetime-local" name="timeOfBuy">
-            </label>
-            <label>
-                Тип транзакции:
-                <select name="type">
-                    <option value="BUY">Покупка</option>
-                    <option value="SELL">Продажа</option>
-                </select>
-            </label>
-            <button type="submit">Сохранить акцию</button>
-        </form>
-
-        <!-- Форма для депозитов -->
-        <form id="depositForm" class="asset-form hidden">
-            <h3>Добавить депозит</h3>
-            <label>
-                Название банка:
-                <input type="text" name="bankName" required>
-            </label>
-            <div class="form-row">
-                <label>
-                    Процентная ставка (%):
-                    <input type="number" step="0.01" name="interestRate" required>
-                </label>
-                <label>
-                    Дата окончания:
-                    <input type="date" name="maturityDate" required>
-                </label>
-            </div>
-            <label>
-                Дата регистрации:
-                <input type="datetime-local" name="registrationDate">
-            </label>
-            <div class="form-row">
-                <div class="checkbox-container">
-                    <input type="checkbox" name="autoRenewable" id="autoRenewable">
-                    <label for="autoRenewable">Автопродление</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" name="capitalization" id="capitalization">
-                    <label for="capitalization">Капитализация</label>
-                </div>
-            </div>
-            <div class="form-row">
-                <label>
-                    Срок (дней):
-                    <input type="number" name="termInDays">
-                </label>
-                <label>
-                    Частота капитализации (дни):
-                    <input type="number" name="capitalizationDays">
-                </label>
-            </div>
-            <div class="form-row">
-                <label>
-                    Итоговая сумма:
-                    <input type="number" step="0.01" name="sumFinal">
-                </label>
-                <label>
-                    Годовой процент:
-                    <input type="number" step="0.01" name="percentYear">
-                </label>
-            </div>
-            <button type="submit">Сохранить депозит</button>
-        </form>
-        </div>
-    </div>
-
-<script src="/js/portfolio.js" type="module" defer></script>
+<script src="js/portfolio.js" type="module"></script>
 </body>
 </html>

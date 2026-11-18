@@ -73,14 +73,14 @@ public class TbankInstrumentsApiClient {
             if (!response.isSuccessful() || response.body() == null) {
                 throw new InstrumentsNotFoundException("Request failed with code: " + response.code());
             }
+
             String body = response.body().string();
-            System.out.println(body);
+
             OutsideStockResponseWrapper responseWrapper = mapper.readValue(body, new TypeReference<>() {});
             List<OutsideStockResponse> list = responseWrapper.getInstruments();
             if (list.isEmpty()) {
                 throw new InstrumentsNotFoundException("Empty response list for instrument: " + instrumentId);
             }
-            System.out.println(list);
             return list;
         } catch (IOException e) {
             System.out.println(e.getMessage());

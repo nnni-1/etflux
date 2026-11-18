@@ -46,7 +46,7 @@ services:
       - "6379:6379"
     restart: always
     networks:
-      - etflux-network
+      - app-network
 
   redis-commander:
     image: rediscommander/redis-commander:latest
@@ -57,7 +57,7 @@ services:
       - REDIS_PORT=6379
     restart: always
     networks:
-      - etflux-network
+      - app-network
 
 volumes:
   postgres_data:

@@ -41,7 +41,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(httpRequests ->
-                        httpRequests.anyRequest().permitAll())
+                        httpRequests
+                                .requestMatchers("/admin/*", "/api/admin/*").hasRole(ADMIN.name())
+                                .requestMatchers("/login", "/register", "/c-login").permitAll()
+                                .requestMatchers("/api/v1/users", "/logout").permitAll()
+                                .anyRequest().permitAll())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/c-login")
                         .loginProcessingUrl("/login")
@@ -55,7 +59,6 @@ public class SecurityConfiguration {
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .logoutSuccessUrl("/c-login"))
-                .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
