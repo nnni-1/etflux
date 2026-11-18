@@ -74,7 +74,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-
+    
       - name: Configure SSH
         env:
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
@@ -96,7 +96,6 @@ jobs:
             --exclude .github \
             --exclude target \
             . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
-
 
       - name: Check if docker-compose.yml exists
         run: |
