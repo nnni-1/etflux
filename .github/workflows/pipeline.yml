@@ -91,17 +91,8 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
-          ssh ${SSH_USER}@${SERVER_IP} << EOF
+          ssh ${SSH_USER}@${SERVER_IP} << 'EOF'
             mkdir -p /home/${SSH_USER}/etflux
-          EOF
-
-      - name: Check remote directory existence
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-        run: |
-          ssh ${SSH_USER}@${SERVER_IP} << EOF
-            ls -ld /home/${SSH_USER}/etflux
           EOF
 
       - name: Deploy files via rsync
