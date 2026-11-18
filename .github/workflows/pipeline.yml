@@ -65,7 +65,7 @@ jobs:
           echo "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Check if .env exists locally
+      - name: Check if prod.env exists locally
         run: |
           if [ -f prod.env ]; then
             echo "prod.env found!"
