@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
                                 .requestMatchers("/admin/*", "/api/admin/*").hasRole(ADMIN.name())
-                                .requestMatchers("/login", "/register", "/c-login").permitAll()
+                                .requestMatchers("/login", "/register").anonymous()
                                 .requestMatchers("/api/v1/users", "/logout").permitAll()
                                 .anyRequest().permitAll())
                 .formLogin(formLogin -> formLogin
