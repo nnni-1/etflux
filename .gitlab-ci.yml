@@ -5,7 +5,6 @@ services:
 stages:
   - build
   - package
-  - deploy
 
 build-maven:
   image: maven:3.8.3-eclipse-temurin-17
@@ -27,20 +26,20 @@ build-docker:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
-deploy-vps:
-  stage: deploy
-  before_script:
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y && apt-get install sshpass)'
-    - eval $(ssh-agent -s)
-  script:
-    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker login -u $CI_PROJECT_NAME -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker rm -f $CI_REGISTRY_IMAGE || true"
-    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker rmi \$(docker images -q $CI_REGISTRY_IMAGE) || true"
-    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST"
-      docker run
-      --name=$CI_PROJECT_NAME
-      --restart=always
-      --env-file prod.env
-      --network etflux-network
-      -p 8082:8080
-      -d $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+#deploy-vps:
+#  stage: deploy
+#  before_script:
+#    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y && apt-get install sshpass)'
+#    - eval $(ssh-agent -s)
+#  script:
+#    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker login -u $CI_PROJECT_NAME -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+#    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker rm -f $CI_REGISTRY_IMAGE || true"
+#    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" "docker rmi \$(docker images -q $CI_REGISTRY_IMAGE) || true"
+#    - sshpass -p $VPS_PASSWORD ssh -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST"
+#      docker run
+#      --name=$CI_PROJECT_NAME
+#      --restart=always
+#      --env-file prod.env
+#      --network etflux-network
+#      -p 8082:8080
+#      -d $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA

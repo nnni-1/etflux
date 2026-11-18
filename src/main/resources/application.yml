@@ -30,14 +30,3 @@ jwt:
   access-token:
     ttl:
       1000000
-api:
-  tbank:
-    token:
-      ${TBANK_INVEST_API_TOKEN}
-    url:
-      instrumentBy: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument
-      shareBy: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.InstrumentsService/ShareBy
-
-  moex:
-    password:
-      ${MOEX_API_PASSWORD}
