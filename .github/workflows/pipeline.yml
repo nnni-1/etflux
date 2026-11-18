@@ -37,10 +37,6 @@ jobs:
         run: |
           docker build -t $IMAGE_NAME .
 
-      - name: List Docker Images
-        run : |
-          docker images
-
   # ========= JOB 2: Push Image to GitHub Container Registry =========
   push:
     name: Push to GitHub Container Registry
