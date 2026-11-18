@@ -7,7 +7,7 @@ on:
       - feature/models
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}:latest
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/etflux:latest
 
 jobs:
   # ========= JOB 1: Build Docker Image =========
