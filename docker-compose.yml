@@ -30,7 +30,7 @@ services:
     profiles:
       - full
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/postgres
     env_file:
       - .env
     ports:
