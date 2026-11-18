@@ -24,7 +24,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       - name: Build Maven project and run tests
         run: |
           mvn clean package
