@@ -65,6 +65,9 @@ jobs:
         run: |
           docker push $IMAGE_NAME
 
+
+      
+
   # ========= JOB 3: Deploy on Server =========
   deploy:
     name: Deploy on VPS
