@@ -27,4 +27,3 @@ mvnw.cmd
 /dist/
 /nbdist/
 /.nb-gradle/
-/src/main/java/ru/alexeev/etflux/Main.java

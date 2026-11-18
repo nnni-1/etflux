@@ -1,19 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/etflux
-    username: postgres
-    password: alexxX27*
+    url: jdbc:postgresql://localhost:5433/mydatabase
+    username: myuser
+    password: mypassword
     driver-class-name: org.postgresql.Driver
-  session:
-    jdbc:
-      initialize-schema: always
-  profiles:
-    active: dev
 
   jpa:
     hibernate:
-      properties:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
     show-sql: true
 

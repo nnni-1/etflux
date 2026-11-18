@@ -6,8 +6,6 @@ import lombok.*;
 import ru.alexeev.etflux.dictionary.UserRoleEnum;
 import ru.alexeev.etflux.dictionary.UserStatus;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString
-public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 9428234628432L;
-
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
