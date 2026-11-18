@@ -85,15 +85,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-          
-      - name: Create remote directory if not exists
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-        run: |
-          ssh ${SSH_USER}@${SERVER_IP} << 'EOF'
-            mkdir -p /home/${SSH_USER}/etflux
-          EOF
 
       - name: Deploy files via rsync
         env:
