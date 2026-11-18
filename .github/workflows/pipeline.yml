@@ -27,14 +27,6 @@ jobs:
       - name: Build Maven project and run tests
         run: |
           mvn clean package
-          
-      - name: Check if JAR exists in target/
-        run: |
-          if [ -f target/etflux-1.0-SNAPSHOT.jar ]; then
-            echo "JAR found!"
-          else
-            echo "JAR NOT FOUND!" && exit 1
-          fi
 
       - name: Prepare Docker context
         run: |
