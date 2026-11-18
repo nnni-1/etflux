@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p build
           cp target/etflux-1.0-SNAPSHOT.jar build/app.jar
-
+            
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME .
