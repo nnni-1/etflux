@@ -12,20 +12,19 @@ services:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - "5433:5433"
+      - "5433:5432"
     networks:
       - etflux-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   etflux:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
     image: ghcr.io/nnni-1/etflux:latest
     container_name: etflux
     restart: always
-    profiles:
-      - full
-    environment:
-      DATABASE_URL: jdbc:postgresql://postgres:5433/postgres
     env_file:
       - prod.env
     ports:
