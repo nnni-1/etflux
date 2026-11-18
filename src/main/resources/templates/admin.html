@@ -130,192 +130,120 @@
     </tbody>
 </table>
 
-<div class="pagination">
-    <button id="btnPrev" onclick="prevPage()">Назад</button>
-    <button id="btnNext" onclick="nextPage()">Вперед</button>
+<div class="pagination" id="paginationControls">
+    <button onclick="prevPage()">Назад</button>
+    <button onclick="nextPage()">Вперед</button>
 </div>
 <div class="btn" id="searchAllButton">
     <button onclick="currPage()">Найти всех пользователей</button>
 </div>
-<div id="pageInfo"></div>
 
-<input id="token" type="hidden" th:value="${token}">
 <script>
     let currentPage = 0;
     let allUsers = [];
-    let searchingByUsername = false;
-    let searchingByEmail = false;
-    let searchingAll = true;
 
-    const searchInputUsernameElement = document.getElementById('searchInputUsername');
+    let searchingByUsername = false
+    let searchingByEmail = false
+    let searchingAll = true
+
+    searchInputUsernameElement = document.getElementById('searchInputUsername')
+    searchInputUsernameElement.addEventListener('input',
+        () =>{
+        if (searchInputUsernameElement.value.length === 0){
+            searchingByUsername = false;
+            searchingByEmail = false;
+            searchingAll = true;
+        }
+        searchingByUsername = true;
+        searchingByEmail = false;
+        searchingAll = false;
+        filterUsersByUsername(this.currentPage, searchInputUsernameElement.value.toLowerCase());
+    });
+
     const searchInputEmailElement = document.getElementById('searchInputEmail');
-
-    // --- Слушатели событий ---
-    searchInputUsernameElement.addEventListener('input', () => {
-        const val = searchInputUsernameElement.value.trim().toLowerCase();
-        if (!val) {
+    searchInputEmailElement.addEventListener('input',
+        () => {
+        if (searchInputEmailElement.value.length === 0){
             searchingByUsername = false;
             searchingByEmail = false;
             searchingAll = true;
-        } else {
-            searchingByUsername = true;
-            searchingByEmail = false;
-            searchingAll = false;
         }
-        currentPage = 0;
-        filterUsersByUsername(currentPage, val);
+        searchingByUsername = false;
+        searchingByEmail = true;
+        searchingAll = false;
+        filterUsersByEmail(this.currentPage, searchInputEmailElement.value.toLowerCase());
     });
 
-    searchInputEmailElement.addEventListener('input', () => {
-        const val = searchInputEmailElement.value.trim().toLowerCase();
-        if (!val) {
-            searchingByUsername = false;
-            searchingByEmail = false;
-            searchingAll = true;
-        } else {
-            searchingByUsername = false;
-            searchingByEmail = true;
-            searchingAll = false;
-        }
-        currentPage = 0;
-        filterUsersByEmail(currentPage, val);
-    });
+    async function filterUsersByUsername(page = 0, username) {
+        const response = await fetch(`/api/admin/users?username=${username}&page=${page}&size=10`);
+        const filtered = await response.json();
+        renderUsers(filtered);
+    }
 
-    // --- Загрузка данных ---
+    async function filterUsersByEmail(page = 0, email) {
+        const response = await fetch(`/api/admin/users?email=${email}&page=${page}&size=10`);
+        const filtered = await response.json();
+        renderUsers(filtered);
+    }
+
     async function loadUsers(page = 0) {
-        showLoading(true);
-        try {
-            const token = document.getElementById("token").value;
-            const response = await fetch(`/api/admin/users?page=${page}&size=10`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) throw new Error("Ошибка загрузки пользователей");
-
-            const data = await response.json();
-            allUsers = data;
-            renderUsers(data);
-        } catch (error) {
-            alert("Не удалось загрузить пользователей");
-            console.error(error);
-        } finally {
-            showLoading(false);
-        }
+        const response = await fetch(`/api/admin/users?page=${page}&size=10`);
+        const users = await response.json();
+        allUsers = users;
+        renderUsers(users);
     }
 
-    async function filterUsersByUsername(page = 0, username = '') {
-        showLoading(true);
-        try {
-            const token = document.getElementById("token").value;
-            const response = await fetch(`/api/admin/users?username=${encodeURIComponent(username)}&page=${page}&size=10`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) throw new Error("Ошибка поиска по имени");
-
-            const data = await response.json();
-            allUsers = data;
-            renderUsers(data);
-        } catch (error) {
-            alert("Ошибка поиска по имени");
-            console.error(error);
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    async function filterUsersByEmail(page = 0, email = '') {
-        showLoading(true);
-        try {
-            const token = document.getElementById("token").value;
-            const response = await fetch(`/api/admin/users?email=${encodeURIComponent(email)}&page=${page}&size=10`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) throw new Error("Ошибка поиска по email");
-
-            const data = await response.json();
-            allUsers = data;
-            renderUsers(data);
-        } catch (error) {
-            alert("Ошибка поиска по email");
-            console.error(error);
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    // --- Отрисовка таблицы ---
-    function renderUsers(data) {
-        const users = data.content || [];
-        const isLast = data.last === true;
-
+    function renderUsers(users) {
         const tbody = document.getElementById("usersBody");
-        if (!tbody) return;
-
         tbody.innerHTML = "";
 
         for (const user of users) {
-            const rolesHtml = (user.roles || [])
-                .map(r => `<span class="role-badge">${r.role}</span>`).join("");
+            const rolesHtml = (user.roles || []).map(r => `<span class="role-badge">${r.role}</span>`).join("");
 
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td>${rolesHtml}</td>
-                <td>${new Date(user.createdAt).toLocaleString()}</td>
-                <td>${user.active ? "Активен" : "Заблокирован"}</td>
-                <td>
-                    <div class="user-actions">
-                        <select onchange="changeRole(${user.id}, this.value)">
-                            <option value="">-- Добавить роль --</option>
-                            <option value="1">ADMIN</option>
-                            <option value="3">MODERATOR</option>
-                            <option value="2">USER</option>
-                        </select>
-                        <select onchange="deleteRole(${user.id}, this.value)">
-                            <option value="">-- Удалить роль --</option>
-                            ${user.roles.map(role => `<option value="${role.id}">${role.role}</option>`).join("")}
-                        </select>
-                        <button onclick="toggleStatus(${user.id})" class="btn ${user.active ? 'btn-danger' : 'btn-success'}">
-                            ${user.active ? "Заблокировать" : "Разблокировать"}
-                        </button>
-                    </div>
-                </td>
-            `;
+        <td>${user.id}</td>
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>${rolesHtml}</td>
+        <td>${new Date(user.createdAt).toLocaleString()}</td>
+        <td>${user.active ? "Активен" : "Заблокирован"}</td>
+        <td>
+          <div class="user-actions">
+            <select onchange="changeRole(${user.id}, this.value)">
+              <option value="">-- Добавить роль --</option>
+              <option value="1">ADMIN</option>
+              <option value="3">MODERATOR</option>
+              <option value="2">USER</option>
+            </select>
+            <select onchange="deleteRole(${user.id}, this.value)">
+              <option value="">-- Удалить роль --</option>
+            </select>
+            <button onclick="toggleStatus(${user.id})" class="btn ${user.active ? 'btn-danger' : 'btn-success'}">
+              ${user.active ? "Заблокировать" : "Разблокировать"}
+            </button>
+          </div>
+        </td>
+      `;
+            const selects = tr.querySelectorAll("select");
+            const deleteRoleSelect = selects[1];
+            user.roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id;
+                option.textContent = role.role;
+                deleteRoleSelect.appendChild(option);
+            });
+
             tbody.appendChild(tr);
         }
-
-        updatePaginationButtons(currentPage === 0, isLast);
     }
 
-    // --- Функции изменения состояния ---
     async function deleteRole(userId, roleId) {
         if (!roleId) return;
-        const token = document.getElementById("token").value;
-        const response = await fetch(`/api/admin/users/delete-role/${userId}?roleId=${roleId}`, {
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await fetch(`/api/admin/users/delete-role/${userId}?roleId=${roleId}`, { method: "GET" });
         if (response.ok) {
             alert("Роль удалена");
-            loadOrFilter();
+            loadUsers(currentPage);
         } else {
             alert("Ошибка при изменении роли");
         }
@@ -323,86 +251,58 @@
 
     async function changeRole(userId, roleId) {
         if (!roleId) return;
-        const token = document.getElementById("token").value;
-        const response = await fetch(`/api/admin/users/add-role/${userId}?roleId=${roleId}`, {
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await fetch(`/api/admin/users/add-role/${userId}?roleId=${roleId}`, { method: "GET" });
         if (response.ok) {
             alert("Роль добавлена");
-            loadOrFilter();
+            loadUsers(currentPage);
         } else {
             alert("Ошибка при изменении роли");
         }
     }
 
     async function toggleStatus(userId) {
-        const token = document.getElementById("token").value;
-        const user = allUsers.content.find(u => u.id === userId);
-        const newStatus = user.active ? 'BLOCKED' : 'ACTIVE';
-
-        const response = await fetch(`/api/admin/users/change-status/${userId}?status=${newStatus}`, {
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
+        const response = await fetch(`/api/admin/users/change-status/${userId}?status=BLOCKED`, { method: "GET" });
         if (response.ok) {
             alert("Статус изменён");
-            loadOrFilter();
+            loadUsers(currentPage);
         } else {
             alert("Ошибка при изменении статуса");
         }
     }
 
-    // --- Пагинация ---
-    function currPage() {
+    function currPage(){
         searchingByUsername = false;
         searchingByEmail = false;
         searchingAll = true;
-
         searchInputEmailElement.value = '';
         searchInputUsernameElement.value = '';
-        currentPage = 0;
         loadUsers(currentPage);
     }
 
     function prevPage() {
-        if (currentPage > 0) {
+        if (currentPage > 1) {
             currentPage--;
-            loadOrFilter();
+            if (searchingByEmail){
+                filterUsersByEmail(currentPage, searchInputEmailElement.value.toLowerCase());
+            } else if (searchingByUsername){
+                filterUsersByUsername(currentPage, searchInputUsernameElement.value.toLowerCase());
+            } else {
+                loadUsers(currentPage);
+            }
         }
     }
 
     function nextPage() {
         currentPage++;
-        loadOrFilter();
-    }
-
-    function loadOrFilter() {
-        if (searchingByUsername) {
-            filterUsersByUsername(currentPage, searchInputUsernameElement.value.toLowerCase());
-        } else if (searchingByEmail) {
+        if (searchingByEmail){
             filterUsersByEmail(currentPage, searchInputEmailElement.value.toLowerCase());
+        } else if (searchingByUsername){
+            filterUsersByUsername(currentPage, searchInputUsernameElement.value.toLowerCase());
         } else {
             loadUsers(currentPage);
         }
     }
 
-    function updatePaginationButtons(isFirst, isLast) {
-        document.getElementById("btnPrev").disabled = isFirst;
-        document.getElementById("btnNext").disabled = isLast;
-    }
-
-    function showLoading(show) {
-        const loading = document.getElementById("loading");
-        if (loading) loading.style.display = show ? "block" : "none";
-    }
-
-    // --- Инициализация ---
     window.onload = () => loadUsers();
 </script>
 

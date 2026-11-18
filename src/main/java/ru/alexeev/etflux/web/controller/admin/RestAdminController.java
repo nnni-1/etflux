@@ -1,9 +1,6 @@
 package ru.alexeev.etflux.web.controller.admin;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.alexeev.etflux.web.controller.admin.dto.UserAdminDto;
@@ -18,11 +15,9 @@ public class RestAdminController {
     private UserService userService;
 
     @GetMapping
-    public Page<UserAdminDto> findUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userService.findAll(pageable);
+    public List<UserAdminDto> findUsers(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size){
+        return userService.findAll(page, size);
     }
 
     @GetMapping("/{userId}")
@@ -55,14 +50,11 @@ public class RestAdminController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Page<UserAdminDto>> findUserByLogin(
-            @RequestParam(value = "username", required = false) String username,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(userService.findAll(username, email, pageable));
+    public ResponseEntity<List<UserAdminDto>> findUserByLogin(@RequestParam(value = "username", required = false) String username,
+                                                              @RequestParam(value = "email", required = false) String email,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(userService.findAll(username, email, page, size));
     }
 
 

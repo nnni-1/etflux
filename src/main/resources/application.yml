@@ -18,8 +18,6 @@ spring:
   data:
     jdbc:
       dialect: postgresql
-    redis:
-      host: redis
 
 server:
   port: 8082
@@ -45,9 +43,6 @@ api:
     url:
       instrumentBy: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.InstrumentsService/FindInstrument
       shareBy: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.InstrumentsService/ShareBy
-      currencyBy: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.InstrumentsService/CurrencyBy
-      getLastPrices: https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.contract.v1.MarketDataService/GetLastPrices
-
 
   moex:
     password:

@@ -3,7 +3,6 @@ package ru.alexeev.etflux.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import ru.alexeev.etflux.dictionary.UserRoleEnum;
 import ru.alexeev.etflux.dictionary.UserStatus;
 
@@ -21,6 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 9428234628432L;
@@ -34,7 +34,7 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", unique = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", unique = false))
@@ -64,19 +64,5 @@ public class User implements Serializable {
 
     public void block(){
         userStatus = UserStatus.BLOCKED;
-    }
-
-    @Override
-    public String toString() {
-        return """
-                {
-                "id": "%d",
-                "username": "%s",
-                "email": "%s",
-                "roles": "%s",
-                "createdAt": "%s",
-                "userStatus": "%s",
-                }
-                """.formatted(id, username, email, roles, createdAt, userStatus);
     }
 }

@@ -40,24 +40,5 @@ services:
     depends_on:
       - postgres-db
 
-  redis:
-    image: redis:5
-    ports:
-      - "6379:6379"
-    restart: always
-    networks:
-      - app-network
-
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    ports:
-      - "8081:8081"
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    restart: always
-    networks:
-      - app-network
-
 volumes:
   postgres_data:

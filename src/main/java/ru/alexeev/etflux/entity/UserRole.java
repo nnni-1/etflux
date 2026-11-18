@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
-public class UserRole implements Serializable {
+public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
