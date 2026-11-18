@@ -74,17 +74,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy files via rsync
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-        run: |
-          rsync -avz -e ssh \
-            --exclude .git \
-            --exclude .github \
-            --exclude target \
-            . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
-          
       - name: Check if docker-compose.yml exists
         run: |
           if [ -f docker-compose.yml ]; then
@@ -106,6 +95,17 @@ jobs:
       - name: Replace image name in docker-compose.yml
         run: |
           sed -i "s|image: etflux|image: $IMAGE_NAME|g" docker-compose.yml
+
+      - name: Deploy files via rsync
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          rsync -avz -e ssh \
+            --exclude .git \
+            --exclude .github \
+            --exclude target \
+            . ${SSH_USER}@${SERVER_IP}:/home/${SSH_USER}/etflux
 
       - name: Pull and restart containers
         env:
