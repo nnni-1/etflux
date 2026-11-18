@@ -7,5 +7,4 @@ import ru.alexeev.etflux.entity.UserRole;
 @Repository
 public interface UserRoleRepository extends CrudRepository<UserRole, Integer> {
     UserRole findByRole(String name);
-
 }

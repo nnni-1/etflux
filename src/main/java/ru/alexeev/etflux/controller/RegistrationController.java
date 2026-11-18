@@ -1,4 +1,4 @@
-package ru.alexeev.etflux.web.controller;
+package ru.alexeev.etflux.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

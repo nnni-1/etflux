@@ -1,4 +1,4 @@
-package ru.alexeev.etflux.web.controller.rest;
+package ru.alexeev.etflux.controller.rest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
