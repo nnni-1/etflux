@@ -74,13 +74,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Check if docker-compose.yml exists
-        run: |
-          if [ -f docker-compose.yml ]; then
-            echo "docker-compose.yml found!"
-          else
-            echo "docker-compose.yml NOT FOUND!" && exit 1
-          fi
       - name: Configure SSH
         env:
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
